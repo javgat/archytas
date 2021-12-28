@@ -35,7 +35,7 @@ try:
 except:
     print("Error during authentication")
 
-tweets = list(tweepy.Cursor(api.search_tweets,"#domingosanitario").items(30))
+tweets = list(tweepy.Cursor(api.search_tweets,"#domingosanitario").items(100))
 for tweet in tweets:
     try:
         print('\nRetweet Bot found tweet by @' + tweet.user.screen_name + '. ' + 'Attempting to retweet.')
