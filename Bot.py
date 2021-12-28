@@ -1,27 +1,22 @@
+from __future__ import unicode_literals
 import tweepy
 import logging
+import config
+import json
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 
 
-class FavRetweetListener(tweepy.StreamListener):
+class RetweetListener(tweepy.Stream):
     def __init__(self, api):
         self.api = api
-        self.me = api.me()
-
     def on_status(self, tweet):
         logger.info(f"Processing tweet id {tweet.id}")
         if tweet.in_reply_to_status_id is not None or \
             tweet.user.id == self.me.id:
             # This tweet is a reply or I'm its author so, ignore it
             return
-        if not tweet.favorited:
-            # Mark it as Liked, since we have not done it yet
-            try:
-                tweet.favorite()
-            except Exception as e:
-                logger.error("Error on fav", exc_info=True)
         if not tweet.retweeted:
             # Retweet, since we have not retweeted it yet
             try:
@@ -33,24 +28,22 @@ class FavRetweetListener(tweepy.StreamListener):
         logger.error(status)
 
 def main(keywords):
-    api = create_api()
-    tweets_listener = FavRetweetListener(api)
-    stream = tweepy.Stream(api.auth, tweets_listener)
-    stream.filter(track=keywords, languages=["en"])
+    auth = tweepy.OAuthHandler("6p7lkW7ZtDJEmiOnIrdJCsmJC", "mh9YWbWEGuQ0HpgHzaR2X8FMs2xVWQWkr0vcmp2AvXFncFFLy4")
+    auth.set_access_token("558034177-4w5n7ZaMhKHvROvJPmq1eZtJsqiI1pYm1BeRmaEe", "lMWAApby7IWYkZs2L8ABBCfC3MgrJnpEor7UMsl3lwBXT")
+
+    api = tweepy.API(auth)
+    api.auth = auth
+    #api.update_status("Soy un bot")
+    tweets_listener = RetweetListener(api)
+    stream = tweepy.Stream("6p7lkW7ZtDJEmiOnIrdJCsmJC","mh9YWbWEGuQ0HpgHzaR2X8FMs2xVWQWkr0vcmp2AvXFncFFLy4","558034177-4w5n7ZaMhKHvROvJPmq1eZtJsqiI1pYm1BeRmaEe","lMWAApby7IWYkZs2L8ABBCfC3MgrJnpEor7UMsl3lwBXT")
+    stream.filter(track=keywords, languages=["es"])
+    try:
+        api.verify_credentials()
+        print("Authentication OK")
+    except:
+        print("Error during authentication")
 
 
-# Authenticate to Twitter
-auth = tweepy.OAuthHandler("", "")
-auth.set_access_token("", "")
 
-# Create API object
-api = tweepy.API(auth)
-
-# Create a tweet
-api.update_status("Hello Tweepy")
-
-try:
-    api.verify_credentials()
-    print("Authentication OK")
-except:
-    print("Error during authentication")
+if __name__ == "__main__":
+    main(["#domingosanitario"])
