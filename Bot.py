@@ -1,5 +1,6 @@
 import tweepy
 import logging
+import json
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
@@ -38,10 +39,17 @@ def main(keywords):
     stream = tweepy.Stream(api.auth, tweets_listener)
     stream.filter(track=keywords, languages=["en"])
 
+# Read JSON
+f = open("auth_data.json", 'r')
+data = json.load(f)
+consumer_key = data['CONSUMER_KEY']
+consumer_secret = data['CONSUMER_SECRET']
+access_token = data['ACCESS_TOKEN']
+access_token_secret = data['ACCESS_TOKEN_SECRET']
 
 # Authenticate to Twitter
-auth = tweepy.OAuthHandler("", "")
-auth.set_access_token("", "")
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
 
 # Create API object
 api = tweepy.API(auth)
