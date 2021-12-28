@@ -1,12 +1,6 @@
-from __future__ import unicode_literals
 import tweepy
-import logging
-import config
 import json
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger()
-
+import time
 
 # Read JSON
 f = open("auth_data.json", 'r')
@@ -27,22 +21,21 @@ try:
 except:
     print("Error during authentication")
 
-for tweet in list(tweepy.Cursor(api.search_tweets("#domingosanitario")).items(10)):
+tweets = list(tweepy.Cursor(api.search_tweets,"#domingosanitario").items(30))
+for tweet in tweets:
     try:
         print('\nRetweet Bot found tweet by @' + tweet.user.screen_name + '. ' + 'Attempting to retweet.')
 
         tweet.retweet()
         print('Retweet published successfully.')
 
-        # Where sleep(10), sleep is measured in seconds.
-        # Change 10 to amount of seconds you want to have in-between retweets.
         # Read Twitter's rules on automation. Don't spam!
-        sleep(1)
+        time.sleep(2)
 
     # Some basic error handling. Will print out why retweet failed, into your terminal.
-    except tweepy.TweepError as error:
+    except tweepy.TweepyException as error:
         print('\nError. Retweet not successful. Reason: ')
-        print(error.reason)
+        print(error)
 
     except StopIteration:
         break
