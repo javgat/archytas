@@ -28,22 +28,27 @@ class RetweetListener(tweepy.Stream):
         logger.error(status)
 
 def main(keywords):
-    auth = tweepy.OAuthHandler("6p7lkW7ZtDJEmiOnIrdJCsmJC", "mh9YWbWEGuQ0HpgHzaR2X8FMs2xVWQWkr0vcmp2AvXFncFFLy4")
-    auth.set_access_token("558034177-4w5n7ZaMhKHvROvJPmq1eZtJsqiI1pYm1BeRmaEe", "lMWAApby7IWYkZs2L8ABBCfC3MgrJnpEor7UMsl3lwBXT")
+    # Read JSON
+    f = open("auth_data.json", 'r')
+    data = json.load(f)
+    consumer_key = data['CONSUMER_KEY']
+    consumer_secret = data['CONSUMER_SECRET']
+    access_token = data['ACCESS_TOKEN']
+    access_token_secret = data['ACCESS_TOKEN_SECRET']
 
+    # Authenticate to Twitter
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_token_secret)
     api = tweepy.API(auth)
-    api.auth = auth
     #api.update_status("Soy un bot")
     tweets_listener = RetweetListener(api)
-    stream = tweepy.Stream("6p7lkW7ZtDJEmiOnIrdJCsmJC","mh9YWbWEGuQ0HpgHzaR2X8FMs2xVWQWkr0vcmp2AvXFncFFLy4","558034177-4w5n7ZaMhKHvROvJPmq1eZtJsqiI1pYm1BeRmaEe","lMWAApby7IWYkZs2L8ABBCfC3MgrJnpEor7UMsl3lwBXT")
+    stream = tweepy.Stream(consumer_key,consumer_secret,access_token,access_token_secret)
     stream.filter(track=keywords, languages=["es"])
     try:
         api.verify_credentials()
         print("Authentication OK")
     except:
         print("Error during authentication")
-
-
 
 if __name__ == "__main__":
     main(["#domingosanitario"])
