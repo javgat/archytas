@@ -45,6 +45,18 @@ def retweetKeyword(api: tweepy.API, keyword: str, items: int):
         except StopIteration:
             break
 
+def tweetRandom(api: tweepy.API, tweetsCSV: str, dailyTweets: int):
+    # Read CSV
+    with open(tweetsCSV, newline='') as f:
+        reader = csv.reader(f)
+        tweetData = list(reader)
+
+    for _ in range(dailyTweets):
+        try:
+            api.update_status(random.choice(tweetData)[0])
+        except:
+            print("Already tweeted that")
+
 def main():
     # Read auth data
     ad = AuthData.CreateFromJson("auth_data.json")
@@ -58,17 +70,8 @@ def main():
     except:
         print("Error during authentication")
     
-    dailyTweets = 3
-    # Read CSV
-    with open('tweets.csv', newline='') as f:
-        reader = csv.reader(f)
-        tweetData = list(reader)
-
-    for i in range(dailyTweets):
-        try:
-            api.update_status(random.choice(tweetData)[0])
-        except:
-            print("Already tweeted that")
+    # Tweet randomly selected tweets
+    tweetRandom(api, "tweets.csv", 3)
     
     # Retweet some tweets with the hashtag
     retweetKeyword(api, "#domingosanitario", 30)
