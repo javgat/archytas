@@ -1,6 +1,8 @@
 import tweepy
 import json
 import time
+import csv
+import random
 
 class AuthData:
     def __init__(self, consumer_key, consumer_secret, access_token, access_token_secret):
@@ -55,6 +57,19 @@ def main():
         print("Authentication OK")
     except:
         print("Error during authentication")
+    
+    dailyTweets = 3
+    # Read CSV
+    with open('tweets.csv', newline='') as f:
+        reader = csv.reader(f)
+        tweetData = list(reader)
+
+    for i in range(dailyTweets):
+        try:
+            api.update_status(random.choice(tweetData)[0])
+        except:
+            print("Already tweeted that")
+    
     # Retweet some tweets with the hashtag
     retweetKeyword(api, "#domingosanitario", 30)
 
