@@ -1,6 +1,8 @@
 import tweepy
 import json
 import time
+import csv
+import random
 
 # Read JSON
 f = open("auth_data.json", 'r')
@@ -10,10 +12,22 @@ consumer_secret = data['CONSUMER_SECRET']
 access_token = data['ACCESS_TOKEN']
 access_token_secret = data['ACCESS_TOKEN_SECRET']
 
+dailyTweets = 3
+
+# Read CSV
+with open('tweets.csv', newline='') as f:
+    reader = csv.reader(f)
+    tweetData = list(reader)
+
 # Authenticate to Twitter
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
+for i in range(dailyTweets):
+    try:
+        api.update_status(random.choice(tweetData)[0])
+    except:
+        print("Already tweeted that")
 #api.update_status("Soy un bot")
 try:
     api.verify_credentials()
