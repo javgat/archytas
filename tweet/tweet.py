@@ -3,6 +3,14 @@ import csv
 import random
 import tweepy
 
+class OutputerInterface:
+    def print(self, message: str) -> None:
+        print(message)
+
+class OutputerCli(OutputerInterface):
+    def print(self, message: str) -> None:
+        pass
+
 def getTweetsKeyword(api: tweepy.API, keyword: str, items: int) -> list:
     tweets = list(tweepy.Cursor(api.search_tweets, keyword).items(items))
     return tweets
@@ -31,7 +39,7 @@ def retweetKeyword(api: tweepy.API, keyword: str, items: int, sleepSeconds: int)
         except StopIteration:
             break
 
-def tweetRandom(api: tweepy.API, tweetsCSV: str, dailyTweets: int):
+def tweetRandom(api: tweepy.API, tweetsCSV: str, dailyTweets: int, output: OutputerInterface):
     # Read CSV
     with open(tweetsCSV, newline='') as f:
         reader = csv.reader(f)
@@ -39,6 +47,8 @@ def tweetRandom(api: tweepy.API, tweetsCSV: str, dailyTweets: int):
 
     for _ in range(dailyTweets):
         try:
-            api.update_status(random.choice(tweetData)[0])
+            tweet = random.choice(tweetData)[0]
+            api.update_status(tweet)
+            output.print("Tweeted: " + tweet)
         except:
-            print("Already tweeted that")
+            output.print("Error: Already tweeted that")
