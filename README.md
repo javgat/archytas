@@ -1,21 +1,5 @@
-# TweetStarBot
+# archytas
 
-Python twitter bot
+Desktop app that lets the user perform different complex actions without opening the web browser.
 
-## Requirements
-
-- Python 3
-- Tweepy
-
-## Authentication
-
-Access tokens and keys must be in a file called "auth_data.json", following this model:
-
-```json
-{
-    "CONSUMER_KEY": "<CONSUMER_KEY>",
-    "CONSUMER_SECRET": "<CONSUMER_SECRET>",
-    "ACCESS_TOKEN": "<ACCESS_TOKEN>",
-    "ACCESS_TOKEN_SECRET": "<ACCESS_TOKEN_SECRET>"
-}
-```
+Made with Python 3, Tweepy and PySide6
