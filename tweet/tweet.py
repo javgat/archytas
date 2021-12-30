@@ -3,8 +3,12 @@ import csv
 import random
 import tweepy
 
-def retweetKeyword(api: tweepy.API, keyword: str, items: int, sleepSeconds: int):
+def getTweetsKeyword(api: tweepy.API, keyword: str, items: int) -> list:
     tweets = list(tweepy.Cursor(api.search_tweets, keyword).items(items))
+    return tweets
+
+def retweetKeyword(api: tweepy.API, keyword: str, items: int, sleepSeconds: int):
+    tweets = getTweetsKeyword(api, keyword, items)
     for tweet in tweets:
         try:
             print('\nRetweet Bot found tweet by @' + tweet.user.screen_name + '. ' + 'Attempting to retweet.')

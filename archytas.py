@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 import sys
-import random
-from PySide6 import QtCore, QtWidgets, QtGui
+from PySide6 import QtCore, QtWidgets, QtCore
 from os.path import exists
 from os import remove
 import tweepy
 from auth.auth import AuthData
-from tweet.tweet import retweetKeyword, tweetRandom
+from tweet.tweet import getTweetsKeyword, tweetRandom
+import types
 
 class AuthDataInput(QtWidgets.QWidget):
     def __init__(self, wrapper: 'AuthDataWidget', authdata_path: str):
@@ -204,6 +204,31 @@ class RetweetWidget(QtWidgets.QWidget):
 
         self.set_connected(False)        
 
+    def QtRetweetList(self, api: tweepy.API, tweets: list, index: int, secs: int, finishedAction: types.FunctionType):
+        tweet = tweets[index]
+        try:
+            print('\nRetweet Bot found tweet by @' + tweet.user.screen_name + '. ' + 'Attempting to retweet.')
+
+            tweet.retweet()
+            print('Retweet published successfully.')
+            index = index + 1
+            if (index < len(tweets)):
+                QtCore.QTimer.singleShot(secs * 1000, lambda: self.QtRetweetList(api, tweets, index, secs, finishedAction))
+            else:
+                finishedAction()
+        # Some basic error handling. Will print out why retweet failed, into your terminal.
+        except tweepy.TweepyException as error:
+            print('\nError TweepyException. Retweet not successful. Reason: ')
+            print(error)
+
+        except tweepy.HTTPException as error:
+            print('\nError HTTPException. Retweet not successful. Reason: ')
+            print(error)
+
+    def QtRetweetKeyword(self, api, keyword, rewteetRange, secs, finishedAction: types.FunctionType):
+        tweets = getTweetsKeyword(api, keyword, rewteetRange)
+        self.QtRetweetList(api, tweets, 0, secs, finishedAction)
+
     @QtCore.Slot()
     def retweet(self):
         self.label_err_message.setText("")
@@ -219,8 +244,14 @@ class RetweetWidget(QtWidgets.QWidget):
             return
         keyword = self.edit_keyword.text()
         self.button_retweet.setEnabled(False)
-        retweetKeyword(api, keyword, retweetRange, 2)
+        self.label_err_message.setText("Retweeting...")
+        finishedAction = self.finishedRetweetingActions
+        seconds_between_retweets = 2
+        self.QtRetweetKeyword(api, keyword, retweetRange, seconds_between_retweets, finishedAction)
+    
+    def finishedRetweetingActions(self):
         self.button_retweet.setEnabled(True)
+        self.label_err_message.setText("Successfully retweeted")
 
     def set_connected(self, connected: bool):
         self.button_retweet.setEnabled(connected)
