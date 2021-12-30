@@ -1,3 +1,5 @@
 auth_data.json
 venv
 *pyc
+build
+dist
