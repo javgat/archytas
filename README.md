@@ -1,6 +1,6 @@
 # archytas
 
-![Version 0.1.0](https://img.shields.io/badge/version-0.1.0-informational) ![License: MIT](https://img.shields.io/badge/license-MIT-green)
+![Version 0.1.0](https://img.shields.io/badge/version-0.1.0-informational) ![License: Unlicense](https://img.shields.io/badge/license-Unlicense-green)
 
 Desktop app that lets the user perform different complex actions without opening the web browser.
 
