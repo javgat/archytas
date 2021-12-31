@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import sys
-from PySide6 import QtCore, QtWidgets, QtGui
+from PySide2 import QtCore, QtWidgets, QtGui
 from os.path import exists, join, abspath
 from os import remove
 import tweepy
@@ -387,7 +387,7 @@ def main():
 
     widget.setWindowIcon( QtGui.QIcon(resource_path("./assets/icon.png")) )
 
-    sys.exit(app.exec())
+    sys.exit(app.exec_())
 
 if __name__=="__main__":
     main()

@@ -1,10 +1,10 @@
 # archytas
 
-![Version 0.1.0](https://img.shields.io/badge/version-0.1.0-informational) ![License: Unlicense](https://img.shields.io/badge/license-Unlicense-green)
+![Version 0.1.1](https://img.shields.io/badge/version-0.1.1-informational) ![License: Unlicense](https://img.shields.io/badge/license-Unlicense-green)
 
 Desktop app that lets the user perform different complex actions without opening the web browser.
 
-Made with Python 3, Tweepy and PySide6 (Qt for python)
+Made with Python 3, Tweepy and PySide2 (Qt5 for python)
 
 ## Requirements
 
